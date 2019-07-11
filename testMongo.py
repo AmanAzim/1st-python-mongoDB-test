@@ -9,17 +9,17 @@ print(myclient.list_database_names())
 
 #######################################################################
 #creating first collection
-mycol=mydb["customers"]
+mycol1=mydb["customers"]
 
 #checking if the collection exists
 print(mydb.list_collection_names())
 #######################################################################
 
 #inserting first record/document in the collection
-mydict={"name":"Aman", "Age":31}
-x=mycol.insert_one(mydict)
-print(x)
-print('the inserted id=',x.inserted_id)
+#mydict={"name":"Aman", "Age":31}
+#x=mycol1.insert_one(mydict)
+#print(x)
+#print('the inserted id=',x.inserted_id)
 
 #insert multiple records/documents
 mylist1 = [
@@ -36,11 +36,12 @@ mylist1 = [
   { "name": "Chuck", "address": "Main Road 989"},
   { "name": "Viola", "address": "Sideway 1633"}
 ]
-x=mycol.insert_many(mylist1)
-print('the inserted id=',x.inserted_ids)
+#x=mycol1.insert_many(mylist1)
+#print('the inserted id=',x.inserted_ids)
 
-#insert documents with specified ids into a new collection
-mycol=mydb["clients"]
+
+#insert documents with specified ids into a new collection#######################################
+mycol2=mydb["clients"]
 
 mylist2 = [
   { "_id": 1, "name": "John", "address": "Highway 37"},
@@ -58,16 +59,42 @@ mylist2 = [
   { "_id": 13, "name": "Chuck", "address": "Main Road 989"},
   { "_id": 14, "name": "Viola", "address": "Sideway 1633"}
 ]
-x=mycol.insert_many(mylist2)
-print('the inserted id=',x.inserted_ids)
-
+#y=mycol2.insert_many(mylist2)
+#print('the inserted id=',y.inserted_ids)
 #######################################################################
 #check if the collection is created
 collist = mydb.list_collection_names()
 if "customers" in collist:
-  print("The collection exists.")
-
+    print("The collection *customers* exists.")
+if "clients" in collist:
+    print("The collection *clients* exists.")
 #checking if database created
-dblist=myclient.list_database_names()
+dblist = myclient.list_database_names()
 if 'mymongodatabase' in dblist:
     print('database exists')
+
+#######################################################################
+#find the first document fo the collection mylist
+f1=mycol1.find_one()
+print(f1)
+f2=mycol2.find_one()
+print(f2)
+
+#find all
+for x in mycol1.find():
+    print(x)
+for x in mycol2.find():
+    print(x)
+
+#find specific fields of the documents/recirds
+#IF we want to print specific field then we have to give its value as 1 and all others need to be 0 but we cannot include the name of all other fileds they all will be 0 automatically however we need to include the "_id" field with its value 0 or 1 if we dont include it it will have the value 1 by default thus it will be visible
+for x in mycol2.find({},{ "_id": 0, "name": 1}):
+  print(x)
+
+for x in mycol2.find({},{ "address": 1 }):
+  print(x)
+
+print("\n\n")
+#Searching one particular record
+for x in mycol2.find({ "address": "Park Lane 38" }):
+    print(x)
