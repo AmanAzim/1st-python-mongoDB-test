@@ -98,3 +98,37 @@ print("\n\n")
 #Searching one particular record
 for x in mycol2.find({ "address": "Park Lane 38" }):
     print(x)
+
+print("\n\n")
+#to find the documents where the "address" field starts with the letter "S" or higher (alphabetically), use the greater than modifier: {"$gt": "S"}:
+matches1=mycol2.find({ "address": { "$gt": "S" } })
+for x in matches1:
+    print(x)
+
+print("\n\n")
+#Sort the found resulta. The sort() method takes one parameter for "fieldname" and one parameter for "direction" (ascending is the default direction):
+for x in mycol2.find().sort("name"):
+    print(x)
+#sort("name", 1) #ascending
+#sort("name", -1) #descending
+print("\n\n")
+for x in mycol2.find({},{"address":0}).sort("name", -1):
+    print(x)
+
+#Delete 1 document(first one if found):
+print("\n\n")
+mycol2.delete_one({ "address": "Mountain 21" })
+for x in mycol2.find({},{"address":0}).sort("name", -1):
+    print(x)
+
+#delete from  multiple documents where the address field starts with "M" and letters below
+print("\n\n")
+d=mycol1.delete_many({"address":{ "$gt": "M" } })
+#Deleting all the documents from a collection
+d=mycol1.delete_many({})
+print(d.deleted_count, "documents deleted")
+
+#To fully drop a collection
+# mycol1.drop()
+
+
